@@ -4,8 +4,8 @@ class Parkircontrollers {
     private $mahasiswaModel;
 
     public function __construct() {
-        $this->parkirModel = new parkir();
-        $this->mahasiswaModel = new mahasiswa();
+        $this->parkirModel = new Parkir();
+        $this->mahasiswaModel = new Mahasiswa();
 }
 
     public function index() {
