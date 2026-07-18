@@ -54,13 +54,25 @@ class Authcontrollers {
 
     public function register() {
         require_once '../app/view/auth/register.php';
+        $role = $_POST['role'] ?? 'mahasiswa';
+
+if ($role === 'admin') {
+    $secret_key = $_POST['secret_key'] ?? '';
+    $kode_benar = "PARKIR2026"; 
+
+    if ($secret_key !== $kode_benar) {
+        $data['error'] = "Kode Rahasia Admin salah! Anda tidak bisa mendaftar sebagai admin.";
+        require_once '../app/view/auth/register.php';
+        return;
+    }
+}
     }
 
     public function prosesRegister() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $username = trim($_POST['username']);
             $password = $_POST['password'];
-            $role = 'mahasiswa';
+            $role = $_POST['role'] ?? 'mahasiswa';
 
             if (empty($username) || empty($password)) {
                 $data['error'] = "Semua field wajib diisi!";
