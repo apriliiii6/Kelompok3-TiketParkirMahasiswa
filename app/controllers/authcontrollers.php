@@ -1,7 +1,6 @@
 <?php
 
-class AuthController {
-    @var Database 
+class Authcontrollers {
     private $db;
 
     public function __construct() {

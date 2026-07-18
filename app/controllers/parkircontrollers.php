@@ -1,21 +1,36 @@
 <?php
+
 class Parkircontrollers {
     private $parkirModel;
     private $mahasiswaModel;
 
     public function __construct() {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         $this->parkirModel = new Parkir();
         $this->mahasiswaModel = new Mahasiswa();
-}
+    }
 
     public function index() {
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            header("Location: index.php?url=auth/index");
+            exit;
+        }
+
         $tikets = $this->parkirModel->getAllWithMahasiswa();
+        
         require_once '../app/view/templates/header.php';
         require_once '../app/view/parkir/index.php';
         require_once '../app/view/templates/footer.php';
     }
 
     public function tambah() {
+        if (!isset($_SESSION['role'])) {
+            header("Location: index.php?url=auth/index");
+            exit;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $nim = trim($_POST['nim']);
             $nama = trim($_POST['nama']);
@@ -31,11 +46,16 @@ class Parkircontrollers {
             }
 
             $mhsId = $this->mahasiswaModel->checkOrInsert($nim, $nama, $prodi, $plat);
-            
             $nomorTiket = "PKR-" . time();
 
-            if ($this->parkirModel->create($mhsId, $nomorTiket)) {
-                header("Location: index.php?url=parkir/index");
+            $lastInsertId = $this->parkirModel->create($mhsId, $nomorTiket);
+
+            if ($lastInsertId) {
+                if ($_SESSION['role'] === 'mahasiswa') {
+                    header("Location: index.php?url=parkir/cetak/" . $lastInsertId);
+                } else {
+                    header("Location: index.php?url=parkir/index");
+                }
                 exit;
             }
         }
@@ -46,6 +66,11 @@ class Parkircontrollers {
     }
 
     public function edit($id) {
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            header("Location: index.php?url=auth/index");
+            exit;
+        }
+
         $tiket = $this->parkirModel->getById($id);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -62,6 +87,11 @@ class Parkircontrollers {
     }
 
     public function hapus($id) {
+        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+            header("Location: index.php?url=auth/index");
+            exit;
+        }
+
         if ($this->parkirModel->delete($id)) {
             header("Location: index.php?url=parkir/index");
             exit;
