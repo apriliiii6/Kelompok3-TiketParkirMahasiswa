@@ -2,10 +2,12 @@
 require_once '../app/config/database.php';
 
 spl_autoload_register(function ($class_name) {
-    if (file_exists('../app/controllers/' . $class_name . '.php')) {
-        require_once '../app/controllers/' . $class_name . '.php';
-    } elseif (file_exists('../app/models/' . $class_name . '.php')) {
-        require_once '../app/models/' . $class_name . '.php';
+    $file_name = strtolower($class_name); 
+    
+    if (file_exists('../app/controllers/' . $file_name . '.php')) {
+        require_once '../app/controllers/' . $file_name . '.php';
+    } elseif (file_exists('../app/models/' . $file_name . '.php')) {
+        require_once '../app/models/' . $file_name . '.php';
     }
 });
 
