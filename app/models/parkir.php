@@ -29,7 +29,7 @@ class parkir extends Database {
     public function create($mahasiswa_id, $nomor_tiket) {
         $waktu_masuk = date('Y-m-d H:i:s');
         $stmt = $this->db->prepare("INSERT INTO tiket_parkir (mahasiswa_id, nomor_tiket, waktu_masuk, status) VALUES (?, ?, ?, 'Aktif')");
-        return $stmt->execute([$mahasiswa_id, $nomor_tiket]);
+        return $stmt->execute([$mahasiswa_id, $nomor_tiket, $waktu_masuk]);
     }
 
     public function updateStatus($id, $status) {
