@@ -1,12 +1,12 @@
 <?php
-class ParkirController {
+class Parkircontrollers {
     private $tiketModel;
     private $mhsModel;
 
     public function __construct() {
         $this->tiketModel = new Tiket();
         $this->mhsModel = new Mahasiswa();
-    }
+}
 
     public function index() {
         $tikets = $this->tiketModel->getAllWithMahasiswa();
