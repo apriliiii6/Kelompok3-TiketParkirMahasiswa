@@ -10,9 +10,9 @@ class Parkircontrollers {
 
     public function index() {
         $tikets = $this->parkirModel->getAllWithMahasiswa();
-        require_once '../app/views/templates/header.php';
-        require_once '../app/views/parkir/index.php';
-        require_once '../app/views/templates/footer.php';
+        require_once '../app/view/templates/header.php';
+        require_once '../app/view/parkir/index.php';
+        require_once '../app/view/templates/footer.php';
     }
 
     public function tambah() {
@@ -24,9 +24,9 @@ class Parkircontrollers {
 
             if (empty($nim) || empty($nama) || empty($plat)) {
                 $error = "Semua field wajib diisi!";
-                require_once '../app/views/templates/header.php';
-                require_once '../app/views/parkir/tambah.php';
-                require_once '../app/views/templates/footer.php';
+                require_once '../app/view/templates/header.php';
+                require_once '../app/view/parkir/tambah.php';
+                require_once '../app/view/templates/footer.php';
                 return;
             }
 
@@ -40,9 +40,9 @@ class Parkircontrollers {
             }
         }
 
-        require_once '../app/views/templates/header.php';
-        require_once '../app/views/parkir/tambah.php';
-        require_once '../app/views/templates/footer.php';
+        require_once '../app/view/templates/header.php';
+        require_once '../app/view/parkir/tambah.php';
+        require_once '../app/view/templates/footer.php';
     }
 
     public function edit($id) {
@@ -56,9 +56,9 @@ class Parkircontrollers {
             }
         }
 
-        require_once '../app/views/templates/header.php';
-        require_once '../app/views/parkir/edit.php';
-        require_once '../app/views/templates/footer.php';
+        require_once '../app/view/templates/header.php';
+        require_once '../app/view/parkir/edit.php';
+        require_once '../app/view/templates/footer.php';
     }
 
     public function hapus($id) {
