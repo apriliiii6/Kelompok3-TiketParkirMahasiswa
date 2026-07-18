@@ -1,15 +1,15 @@
 <?php
 class Parkircontrollers {
-    private $tiketModel;
-    private $mhsModel;
+    private $parkirModel;
+    private $mahasiswaModel;
 
     public function __construct() {
-        $this->tiketModel = new Tiket();
-        $this->mhsModel = new Mahasiswa();
+        $this->parkirModel = new parkir();
+        $this->mahasiswaModel = new mahasiswa();
 }
 
     public function index() {
-        $tikets = $this->tiketModel->getAllWithMahasiswa();
+        $tikets = $this->parkirModel->getAllWithMahasiswa();
         require_once '../app/views/templates/header.php';
         require_once '../app/views/parkir/index.php';
         require_once '../app/views/templates/footer.php';
@@ -30,11 +30,11 @@ class Parkircontrollers {
                 return;
             }
 
-            $mhsId = $this->mhsModel->checkOrInsert($nim, $nama, $prodi, $plat);
+            $mhsId = $this->mahasiswaModel->checkOrInsert($nim, $nama, $prodi, $plat);
             
             $nomorTiket = "PKR-" . time();
 
-            if ($this->tiketModel->create($mhsId, $nomorTiket)) {
+            if ($this->parkirModel->create($mhsId, $nomorTiket)) {
                 header("Location: index.php?url=parkir/index");
                 exit;
             }
@@ -46,11 +46,11 @@ class Parkircontrollers {
     }
 
     public function edit($id) {
-        $tiket = $this->tiketModel->getById($id);
+        $tiket = $this->parkirModel->getById($id);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $status = $_POST['status'];
-            if ($this->tiketModel->updateStatus($id, $status)) {
+            if ($this->parkirModel->updateStatus($id, $status)) {
                 header("Location: index.php?url=parkir/index");
                 exit;
             }
@@ -62,7 +62,7 @@ class Parkircontrollers {
     }
 
     public function hapus($id) {
-        if ($this->tiketModel->delete($id)) {
+        if ($this->parkirModel->delete($id)) {
             header("Location: index.php?url=parkir/index");
             exit;
         }

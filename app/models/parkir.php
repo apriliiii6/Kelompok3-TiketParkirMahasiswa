@@ -1,5 +1,5 @@
 <?php
-class Tiket extends Database {
+class parkir extends Database {
     private $db;
 
     public function __construct() {
