@@ -4,7 +4,8 @@ class Authcontrollers {
     private $db;
 
     public function __construct() {
-        $this->db = new Database();
+        $database = new Database();
+        $this->db = $database->connect();
     }
 
     public function index() {
@@ -16,8 +17,9 @@ class Authcontrollers {
             $username = $_POST['username'];
             $password = $_POST['password'];
 
-            $this->db->query("SELECT * FROM users WHERE username = ?");
-            $user = $this->db->single([$username]);
+            $stmt = $this->db->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt->execute([$username]);
+            $user = $stmt->fetch();
 
             if ($user && ($password == $user['password'] || password_verify($password, $user['password']))) {
                 if (session_status() == PHP_SESSION_NONE) {
@@ -48,5 +50,41 @@ class Authcontrollers {
         session_destroy();
         header("Location: index.php?url=auth/index");
         exit;
+    }
+
+    public function register() {
+        require_once '../app/view/auth/register.php';
+    }
+
+    public function prosesRegister() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $username = trim($_POST['username']);
+            $password = $_POST['password'];
+            $role = 'mahasiswa';
+
+            if (empty($username) || empty($password)) {
+                $data['error'] = "Semua field wajib diisi!";
+                require_once '../app/view/auth/register.php';
+                return;
+            }
+
+            $stmt = $this->db->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt->execute([$username]);
+            if ($stmt->fetch()) {
+                $data['error'] = "Username sudah digunakan!";
+                require_once '../app/view/auth/register.php';
+                return;
+            }
+
+            $insert = $this->db->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
+            
+            if ($insert->execute([$username, $password, $role])) {
+                header("Location: index.php?url=auth/index");
+                exit;
+            } else {
+                $data['error'] = "Gagal mendaftarkan akun.";
+                require_once '../app/view/auth/register.php';
+            }
+        }
     }
 }

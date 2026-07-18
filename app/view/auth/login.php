@@ -32,6 +32,9 @@
             <input type="password" name="password" required>
         </div>
         <button type="submit" class="btn-login">Masuk</button>
+        <div class="text-center mt-3">
+    <a href="index.php?url=auth/register" class="text-decoration-none small">Belum punya akun? Daftar Baru</a>
+</div>
     </form>
 </div>
 
