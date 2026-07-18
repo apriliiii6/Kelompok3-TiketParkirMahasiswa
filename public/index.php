@@ -13,7 +13,7 @@ $controllerName = isset($_GET['url']) ? explode('/', rtrim($_GET['url'], '/'))[0
 $actionName = isset($_GET['url']) ? (explode('/', rtrim($_GET['url'], '/'))[1] ?? 'index') : 'index';
 $id = isset($_GET['url']) ? (explode('/', rtrim($_GET['url'], '/'))[2] ?? null) : null;
 
-$controllerClassName = ucfirst($controllerName) . 'Controller';
+$controllerClassName = ucfirst($controllerName) . 'controller';
 
 if (class_exists($controllerClassName)) {
     $controller = new $controllerClassName();
