@@ -1,88 +1,51 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Cetak Tiket Parkir</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            padding: 20px;
-        }
-        .tiket-box {
-            width: 320px;
-            padding: 20px;
-            border: 2px dashed #333;
-            background-color: #fff;
-            text-align: center;
-            margin: 0 auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .barcode {
-            margin: 20px 0;
-        }
-        .barcode img {
-            max-width: 100%;
-            height: auto;
-        }
-        .info-table {
-            width: 100%;
-            text-align: left;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-        .info-table td {
-            padding: 4px 0;
-        }
-        .footer-text {
-            font-size: 11px;
-            color: #777;
-            margin-top: 15px;
-        }
-    </style>
-</head>
-<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-<div class="tiket-box">
-    <h3 style="margin-bottom: 5px;">TIKET PARKIR</h3>
-    <h4 style="margin-top: 0; color: #0056b3;">MAHASISWA</h4>
-    <hr style="border: top 1px dashed #ccc;">
-    
-    <div class="barcode">
-        <img src="https://bwipjs-api.metafloor.com/?bcid=code128&text=<?= urlencode($data['tiket']['nomor_tiket']); ?>&scale=2&rotate=N&includeText=true" alt="Barcode Tiket">
+<style>
+    .ticket-card { max-width: 350px; margin: 50px auto; border: 2px dashed #333; border-radius: 8px; }
+    @media print {
+        body * { visibility: hidden; }
+        .ticket-card, .ticket-card * { visibility: visible; }
+        .ticket-card { position: absolute; left: 0; top: 0; margin: 0; border: none; width: 100%; }
+        .btn-print, header, footer, nav { display: none !important; }
+    }
+</style>
+
+<div class="container">
+    <div class="card ticket-card p-4 bg-white text-center shadow-sm">
+        <h4 class="fw-bold mb-1">E-TIKET PARKIR</h4>
+        <small class="text-secondary">Universitas Parkir 2026</small>
+        <hr class="my-2">
+        
+        <div class="my-3 text-start bg-light p-2 rounded small font-monospace">
+            <div><strong>Plat Nomor :</strong> <?= htmlspecialchars($data['plat_nomor'] ?? 'N/A'); ?></div>
+            <div><strong>Waktu Masuk:</strong> <?= isset($tiket['waktu_masuk']) ? date('d-m-Y H:i:s', strtotime($tiket['waktu_masuk'])) : date('d-m-Y H:i:s'); ?></div>
+            <div><strong>Status      :</strong> Aktif</div>
+        </div>
+
+        <div class="my-4 d-flex justify-content-center">
+            <div id="qrcodeTarget"></div>
+        </div>
+
+        <hr class="my-2">
+        <button onclick="window.print()" class="btn btn-dark btn-print w-100 fw-semibold">Cetak Tiket</button>
     </div>
-
-    <table class="info-table">
-        <tr>
-            <td><strong>No. Tiket</strong></td>
-            <td>: <?= $data['tiket']['nomor_tiket']; ?></td>
-        </tr>
-        <tr>
-            <td><strong>NIM</strong></td>
-            <td>: <?= $data['tiket']['nim']; ?></td>
-        </tr>
-        <tr>
-            <td><strong>Nama</strong></td>
-            <td>: <?= $data['tiket']['nama']; ?></td>
-        </tr>
-        <tr>
-            <td><strong>Plat Nomor</strong></td>
-            <td>: <?= $data['tiket']['plat_nomor']; ?></td>
-        </tr>
-        <tr>
-            <td><strong>Prodi</strong></td>
-            <td>: <?= $data['tiket']['prodi']; ?></td>
-        </tr>
-    </table>
-
-    <hr style="border: top 1px dashed #ccc;">
-    <p style="font-size: 12px; margin-bottom: 5px;"><strong>Waktu Masuk:</strong><br><?= $data['tiket']['waktu_masuk']; ?></p>
-    <div class="footer-text">Jangan sampai menghilangkan tiket ini!</div>
 </div>
 
 <script>
-    window.print();
+    document.addEventListener("DOMContentLoaded", function() {
+        const rawKode = "<?= $data['kode_tiket'] ?? 'PKR-' . time(); ?>";
+        
+        const ipKomputer = "192.168.1.XX"; 
+        
+        const urlAplikasi = "http://" + ipKomputer + "/TiketParkirMahasiswa/public/index.php?url=parkir/prosesKeluar&kode_tiket=" + encodeURIComponent(rawKode);
+        
+        new QRCode(document.getElementById("qrcodeTarget"), {
+            text: urlAplikasi,
+            width: 140,
+            height: 140,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.M
+        });
+    });
 </script>
-
-</body>
-</html>

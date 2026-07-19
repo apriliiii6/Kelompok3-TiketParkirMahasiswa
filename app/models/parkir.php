@@ -1,6 +1,6 @@
 <?php
 class parkir extends Database {
-    private $db;
+    public $db; 
 
     public function __construct() {
         $this->db = $this->connect();
@@ -28,12 +28,16 @@ class parkir extends Database {
 
     public function create($mahasiswa_id, $nomor_tiket) {
         $waktu_masuk = date('Y-m-d H:i:s');
-        $stmt = $this->db->prepare("INSERT INTO tiket_parkir (mahasiswa_id, nomor_tiket, waktu_masuk, status) VALUES (?, ?, ?, 'Aktif')");
-        return $stmt->execute([$mahasiswa_id, $nomor_tiket, $waktu_masuk]);
+        $stmt = $this->db->prepare("INSERT INTO tiket_parkir (mahasiswa_id, nomor_tiket, waktu_masuk, status) VALUES (?, ?, ?, 'masuk')");
+        
+        if ($stmt->execute([$mahasiswa_id, $nomor_tiket, $waktu_masuk])) {
+            return $this->db->lastInsertId();
+        }
+        return false;
     }
 
     public function updateStatus($id, $status) {
-        $waktu_keluar = ($status === 'Selesai') ? date('Y-m-d H:i:s') : null;
+        $waktu_keluar = ($status === 'keluar' || $status === 'Selesai') ? date('Y-m-d H:i:s') : null;
         $stmt = $this->db->prepare("UPDATE tiket_parkir SET status = ?, waktu_keluar = ? WHERE id = ?");
         return $stmt->execute([$status, $waktu_keluar, $id]);
     }

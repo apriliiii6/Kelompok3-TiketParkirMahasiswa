@@ -26,9 +26,11 @@ class Authcontrollers {
                     session_start();
                 }
                 
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                $_SESSION['role'] = $user['role'];
+            $_SESSION['role'] = 'mahasiswa';
+            $_SESSION['mahasiswa_id'] = $user['id']; // ID primary key mahasiswa
+            $_SESSION['nim'] = $user['nim'];
+            $_SESSION['nama'] = $user['nama'];
+            $_SESSION['plat_nomor'] = $user['plat_nomor'];
 
                 if ($user['role'] == 'admin') {
                     header("Location: index.php?url=parkir/index");
