@@ -2,66 +2,85 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Daftar Akun Baru</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Registrasi Akun</title>
     <style>
-        body { background-color: #f8f9fa; }
-        .card-register { max-width: 400px; margin: 80px auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        body { font-family: Arial, sans-serif; background: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 25px; border-radius: 8px; width: 350px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .alert { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 14px; text-align: center; }
+        .form-group { margin-bottom: 12px; }
+        label { font-size: 13px; font-weight: bold; display: block; margin-bottom: 4px; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #28a745; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .link { text-align: center; margin-top: 15px; font-size: 13px; }
     </style>
 </head>
 <body>
+<div class="card">
+    <h3 style="text-align: center; margin-top:0;">Daftar Akun Baru</h3>
 
-<div class="card card-register p-4 bg-white">
-    <h3 class="text-center mb-4 fw-bold">Daftar Akun Baru</h3>
-    
-    <?php if(isset($data['error'])) : ?>
-        <div class="alert alert-danger p-2 small text-center"><?= $data['error']; ?></div>
+    <?php if(!empty($error)): ?>
+        <div class="alert"><?= htmlspecialchars($error); ?></div>
     <?php endif; ?>
 
-    <form action="index.php?url=auth/prosesRegister" method="POST">
-        <div class="mb-3">
-            <label for="username" class="form-label small fw-semibold text-secondary">Username</label>
-            <input type="text" name="username" class="form-control" id="username" required autocomplete="off">
-        </div>
-        
-        <div class="mb-3">
-            <label for="password" class="form-label small fw-semibold text-secondary">Password</label>
-            <input type="password" name="password" class="form-control" id="password" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="role" class="form-label small fw-semibold text-secondary">Daftar Sebagai</label>
-            <select name="role" class="form-select" id="role">
-                <option value="mahasiswa">Mahasiswa</option>
+    <form action="index.php?url=auth/proses_register" method="POST">
+        <div class="form-group">
+            <label>Daftar Sebagai</label>
+            <select name="role" id="role" onchange="toggleForm()">
+                <option value="student">Mahasiswa</option>
                 <option value="admin">Admin</option>
             </select>
         </div>
-
-        <div class="mb-3" id="secret-key-container" style="display: none;">
-            <label for="secret_key" class="form-label small fw-semibold text-danger">Kode Rahasia Admin</label>
-            <input type="password" name="secret_key" class="form-control" id="secret_key">
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" required>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" required>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 fw-semibold my-2">Daftar Sekarang</button>
+        <div id="mhs_fields">
+            <div class="form-group">
+                <label>NIM</label>
+                <input type="text" name="nim">
+            </div>
+            <div class="form-group">
+                <label>Nama Lengkap</label>
+                <input type="text" name="nama">
+            </div>
+            <div class="form-group">
+                <label>Program Studi</label>
+                <input type="text" name="prodi">
+            </div>
+            <div class="form-group">
+                <label>Plat Nomor Kendaraan</label>
+                <input type="text" name="plat_nomor" placeholder="Contoh: B 1234 ABC">
+            </div>
+        </div>
+
+        <div id="admin_fields" style="display: none;">
+            <div class="form-group">
+                <label>Kode Rahasia Admin</label>
+                <input type="password" name="admin_key" placeholder="Masukkan ADMIN123">
+            </div>
+        </div>
+
+        <button type="submit">Daftar</button>
     </form>
-    
-    <div class="text-center mt-3">
-        <a href="index.php?url=auth/index" class="text-decoration-none small">Sudah punya akun? Login di sini</a>
-    </div>
+    <div class="link">Sudah punya akun? <a href="index.php?url=auth/index">Login di sini</a></div>
 </div>
 
 <script>
-    document.getElementById('role').addEventListener('change', function() {
-        var container = document.getElementById('secret-key-container');
-        if (this.value === 'admin') {
-            container.style.display = 'block';
-            document.getElementById('secret_key').setAttribute('required', 'required');
-        } else {
-            container.style.display = 'none';
-            document.getElementById('secret_key').removeAttribute('required');
-        }
-    });
+function toggleForm() {
+    var role = document.getElementById('role').value;
+    if(role === 'admin') {
+        document.getElementById('admin_fields').style.display = 'block';
+        document.getElementById('mhs_fields').style.display = 'none';
+    } else {
+        document.getElementById('admin_fields').style.display = 'none';
+        document.getElementById('mhs_fields').style.display = 'block';
+    }
+}
 </script>
-
 </body>
 </html>

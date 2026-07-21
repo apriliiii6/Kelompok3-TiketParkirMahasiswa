@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Sistem Parkir</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
@@ -13,16 +14,23 @@
         .btn-login { width: 100%; padding: 10px; background: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
         .btn-login:hover { background: #004085; }
         .alert { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center; }
+        .text-center { text-align: center; }
+        .mt-3 { margin-top: 15px; }
+        .text-decoration-none { text-decoration: none; color: #0056b3; }
+        .text-decoration-none:hover { text-decoration: underline; }
+        .small { font-size: 14px; }
     </style>
 </head>
 <body>
 
 <div class="login-card">
     <h2>Sistem Parkir Login</h2>
+    
     <?php if (isset($data['error'])): ?>
         <div class="alert"><?= $data['error']; ?></div>
     <?php endif; ?>
-    <form action="index.php?url=auth/login" method="POST">
+
+    <form action="index.php?url=auth/proses_login" method="POST">
         <div class="form-group">
             <label>Username</label>
             <input type="text" name="username" required autocomplete="off">
@@ -32,9 +40,10 @@
             <input type="password" name="password" required>
         </div>
         <button type="submit" class="btn-login">Masuk</button>
+        
         <div class="text-center mt-3">
-    <a href="index.php?url=auth/register" class="text-decoration-none small">Belum punya akun? Daftar Baru</a>
-</div>
+            <a href="index.php?url=auth/register" class="text-decoration-none small">Belum punya akun? Daftar Baru</a>
+        </div>
     </form>
 </div>
 

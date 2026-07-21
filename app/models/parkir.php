@@ -1,49 +1,53 @@
 <?php
-class parkir extends Database {
-    public $db; 
+
+class Parkir {
+    private $db;
 
     public function __construct() {
-        $this->db = $this->connect();
+        $database = new Database();
+        $this->db = $database->connect();
     }
 
     public function getAllWithMahasiswa() {
-        $sql = "SELECT t.*, m.nama, m.nim, m.plat_nomor, m.prodi 
-                FROM tiket_parkir t 
-                JOIN mahasiswa m ON t.mahasiswa_id = m.id 
-                ORDER BY t.waktu_masuk DESC";
-        $stmt = $this->db->prepare($sql);
+        $query = "SELECT p.*, m.nim, m.nama, m.prodi, m.plat_nomor 
+                  FROM tiket_parkir p 
+                  JOIN mahasiswa m ON p.mahasiswa_id = m.id 
+                  ORDER BY p.waktu_masuk DESC";
+        $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll();
     }
 
     public function getById($id) {
-        $sql = "SELECT t.*, m.nama, m.nim, m.plat_nomor, m.prodi 
-                FROM tiket_parkir t 
-                JOIN mahasiswa m ON t.mahasiswa_id = m.id 
-                WHERE t.id = ?";
-        $stmt = $this->db->prepare($sql);
+        $query = "SELECT p.*, m.nim, m.nama, m.prodi, m.plat_nomor 
+                  FROM tiket_parkir p 
+                  JOIN mahasiswa m ON p.mahasiswa_id = m.id 
+                  WHERE p.id = ?";
+        $stmt = $this->db->prepare($query);
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
 
     public function create($mahasiswa_id, $nomor_tiket) {
-        $waktu_masuk = date('Y-m-d H:i:s');
-        $stmt = $this->db->prepare("INSERT INTO tiket_parkir (mahasiswa_id, nomor_tiket, waktu_masuk, status) VALUES (?, ?, ?, 'masuk')");
+        $query = "INSERT INTO tiket_parkir (mahasiswa_id, nomor_tiket, waktu_masuk, status) 
+                  VALUES (?, ?, NOW(), 'masuk')";
         
-        if ($stmt->execute([$mahasiswa_id, $nomor_tiket, $waktu_masuk])) {
+        $stmt = $this->db->prepare($query);
+        if ($stmt->execute([$mahasiswa_id, $nomor_tiket])) {
             return $this->db->lastInsertId();
         }
         return false;
     }
 
     public function updateStatus($id, $status) {
-        $waktu_keluar = ($status === 'keluar' || $status === 'Selesai') ? date('Y-m-d H:i:s') : null;
-        $stmt = $this->db->prepare("UPDATE tiket_parkir SET status = ?, waktu_keluar = ? WHERE id = ?");
-        return $stmt->execute([$status, $waktu_keluar, $id]);
+        $query = "UPDATE tiket_parkir SET status = ? WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute([$status, $id]);
     }
 
     public function delete($id) {
-        $stmt = $this->db->prepare("DELETE FROM tiket_parkir WHERE id = ?");
+        $query = "DELETE FROM tiket_parkir WHERE id = ?";
+        $stmt = $this->db->prepare($query);
         return $stmt->execute([$id]);
     }
 }
