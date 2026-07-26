@@ -6,12 +6,12 @@
     <p><strong>Plat Nomor:</strong> <?= htmlspecialchars($tiket['plat_nomor']) ?></p>
 </div>
 
-<form action="index.php?url=parkir/edit/<?= $tiket['id'] ?>" method="POST" class="form-group">
+<form action="index.php?url=parkir/edit&id=<?= $tiket['id'] ?>" method="POST" class="form-group">
     <div class="form-field">
         <label>Status Parkir</label>
         <select name="status">
             <option value="Aktif" <?= $tiket['status'] === 'Aktif' ? 'selected' : '' ?>>Aktif (Kendaraan di dalam)</option>
-            <option value="Selesai" <?= $tiket['status'] === 'Selesai' ? 'selected' : '' ?>>Selesai (Kendaraan Keluar)</option>
+            <option value="Selesai" <?= $tiket['status'] === 'Selesai' ? 'selected' : '' ?>>Selesai</option>
         </select>
     </div>
 
