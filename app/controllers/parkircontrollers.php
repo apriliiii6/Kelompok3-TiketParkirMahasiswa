@@ -13,7 +13,7 @@ class Parkircontrollers {
 
     private function renderView($viewPath, $data = []) {
         extract($data);
-        $filePath = __DIR__ . '/../view/' . $viewPath . '.php';
+        $filePath = dirname(__DIR__) . '/view/' . $viewPath . '.php';
 
         if (file_exists($filePath)) {
             require_once $filePath;

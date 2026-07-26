@@ -1,53 +1,26 @@
 <?php
 
-class Parkir {
-    private $db;
+class Parkir extends Controller {
 
-    public function __construct() {
-        $database = new Database();
-        $this->db = $database->connect();
-    }
-
-    public function getAllWithMahasiswa() {
-        $query = "SELECT p.*, m.nim, m.nama, m.prodi, m.plat_nomor 
-                  FROM tiket_parkir p 
-                  JOIN mahasiswa m ON p.mahasiswa_id = m.id 
-                  ORDER BY p.waktu_masuk DESC";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll();
-    }
-
-    public function getById($id) {
-        $query = "SELECT p.*, m.nim, m.nama, m.prodi, m.plat_nomor 
-                  FROM tiket_parkir p 
-                  JOIN mahasiswa m ON p.mahasiswa_id = m.id 
-                  WHERE p.id = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute([$id]);
-        return $stmt->fetch();
-    }
-
-    public function create($mahasiswa_id, $nomor_tiket) {
-        $query = "INSERT INTO tiket_parkir (mahasiswa_id, nomor_tiket, waktu_masuk, status) 
-                  VALUES (?, ?, NOW(), 'masuk')";
+    public function index() {
+        $data['judul'] = 'Daftar Tiket Parkir';
+        $data['parkir'] = $this->model('Parkir_model')->getAllWithMahasiswa();
         
-        $stmt = $this->db->prepare($query);
-        if ($stmt->execute([$mahasiswa_id, $nomor_tiket])) {
-            return $this->db->lastInsertId();
+        $this->view('templates/header', $data);
+        $this->view('parkir/index', $data);
+        $this->view('templates/footer');
+    }
+
+    public function tambah() {
+        $this->view('templates/header', ['judul' => 'Tambah Tiket']);
+        $this->view('parkir/tambah');
+        $this->view('templates/footer');
+    }
+
+    public function hapus($id) {
+        if ($this->model('Parkir_model')->delete($id) > 0) {
+            header('Location: ' . BASEURL . '/parkir');
+            exit;
         }
-        return false;
-    }
-
-    public function updateStatus($id, $status) {
-        $query = "UPDATE tiket_parkir SET status = ? WHERE id = ?";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([$status, $id]);
-    }
-
-    public function delete($id) {
-        $query = "DELETE FROM tiket_parkir WHERE id = ?";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([$id]);
     }
 }

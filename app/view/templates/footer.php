@@ -1,11 +1,8 @@
-</div> 
+</div>
 
-<footer class="footer mt-5 py-3 text-center text-muted small">
-    <div class="container">
-        &copy; 2026 Kelompok Pemrograman Web 1. All Rights Reserved.
-    </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <footer style="width: 100%; text-align: center; padding: 20px 0; color: #6c757d; font-size: 0.9rem; background-color: #eef2f8;">
+            &copy; 2026 Kelompok Pemrograman Web 1. All Rights Reserved.
+        </footer>
+    </div> 
 </body>
 </html>

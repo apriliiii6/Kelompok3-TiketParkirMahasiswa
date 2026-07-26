@@ -1,20 +1,27 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once '../app/config/database.php';
 
 spl_autoload_register(function ($class_name) {
-    $file_name = strtolower($class_name); 
-    if (file_exists('../app/controllers/' . $file_name . '.php')) {
-        require_once '../app/controllers/' . $file_name . '.php';
-    } elseif (file_exists('../app/models/' . $file_name . '.php')) {
-        require_once '../app/models/' . $file_name . '.php';
+    $file_lower = strtolower($class_name);
+    
+    if (file_exists('../app/controllers/' . $file_lower . '.php')) {
+        require_once '../app/controllers/' . $file_lower . '.php';
+    } elseif (file_exists('../app/models/' . $class_name . '.php')) {
+        require_once '../app/models/' . $class_name . '.php';
     }
 });
 
-$controllerName = isset($_GET['url']) ? explode('/', rtrim($_GET['url'], '/'))[0] : 'home';
-$actionName = isset($_GET['url']) ? (explode('/', rtrim($_GET['url'], '/'))[1] ?? 'index') : 'index';
-$id = isset($_GET['url']) ? (explode('/', rtrim($_GET['url'], '/'))[2] ?? null) : null;
+$url = isset($_GET['url']) ? explode('/', rtrim($_GET['url'], '/')) : [];
+$controllerName = isset($url[0]) ? strtolower($url[0]) : 'home';
+$actionName = isset($url[1]) ? $url[1] : 'index';
+$id = isset($url[2]) ? $url[2] : null;
 
-$controllerClassName = ucfirst($controllerName) . 'controllers';
+$controllerClassName = $controllerName . 'controllers';
 
 if (class_exists($controllerClassName)) {
     $controller = new $controllerClassName();
@@ -25,8 +32,8 @@ if (class_exists($controllerClassName)) {
             $controller->$actionName();
         }
     } else {
-        die("404 - Aksi tidak ditemukan");
+        die("404 - Aksi tidak ditemukan: " . $actionName);
     }
 } else {
-    die("404 - Halaman tidak ditemukan");
+    die("404 - Halaman/Controller tidak ditemukan: " . $controllerClassName);
 }

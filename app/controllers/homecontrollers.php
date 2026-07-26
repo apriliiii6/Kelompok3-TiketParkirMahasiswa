@@ -1,8 +1,8 @@
 <?php
-class HomeController {
+class Homecontrollers {
     public function index() {
-        require_once '../app/views/templates/header.php';
-        require_once '../app/views/home.php';
-        require_once '../app/views/templates/footer.php';
+        require_once $_SERVER['DOCUMENT_ROOT'] . '/TiketParkirMahasiswa/app/view/templates/header.php';
+        require_once $_SERVER['DOCUMENT_ROOT'] . '/TiketParkirMahasiswa/app/view/home.php';
+        require_once $_SERVER['DOCUMENT_ROOT'] . '/TiketParkirMahasiswa/app/view/templates/footer.php';
     }
 }
