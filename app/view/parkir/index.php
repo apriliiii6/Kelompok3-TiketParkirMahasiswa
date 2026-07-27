@@ -55,7 +55,7 @@
                                 <td><?= htmlspecialchars($t['waktu_masuk']); ?></td>
                                 <td><?= !empty($t['waktu_keluar']) ? htmlspecialchars($t['waktu_keluar']) : '-'; ?></td>
                                 <td>
-                                    <span class="badge <?= (strtolower($t['status']) == 'aktif') ? 'bg-success' : 'bg-secondary'; ?> text-white">
+                                    <span class="badge <?= (strtolower($t['status']) == 'aktif') ? 'bg-success' : 'bg-secondary'; ?>">
                                         <?= htmlspecialchars($t['status']); ?>
                                     </span>
                                 </td>
