@@ -34,6 +34,9 @@ class Parkircontrollers {
             exit;
         }
 
+        $stmt_update = $this->db->prepare("UPDATE tiket_parkir SET status = 'Expired' WHERE LOWER(status) = 'aktif' AND TIMESTAMPDIFF(HOUR, waktu_masuk, NOW()) >= 7");
+        $stmt_update->execute();
+
         $stmt = $this->db->prepare("SELECT * FROM tiket_parkir ORDER BY id DESC");
         $stmt->execute();
         $data_parkir = $stmt->fetchAll(PDO::FETCH_ASSOC);

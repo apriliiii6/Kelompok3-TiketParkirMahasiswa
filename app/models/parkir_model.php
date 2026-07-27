@@ -1,7 +1,7 @@
 <?php
 
-class parkir {
-    private $table = 'tiket_parkir';
+class parkir_model {
+    private $table = 'tiket_parkir'; 
     private $db;
 
     public function __construct() {
@@ -23,5 +23,11 @@ class parkir {
         $this->db->execute();
         
         return $this->db->row_count();
+    }
+
+    public function get_tiket_by_kode($kode_qr) {
+        $this->db->query('select * from ' . $this->table . ' where kode_qr = :kode_qr');
+        $this->db->bind('kode_qr', $kode_qr);
+        return $this->db->single();
     }
 }
